@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}"> <!-- Reuse contact inputs -->
+<link rel="stylesheet" href="{% static 'css/checkout.css' %}">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+{% endblock %}
+
+{% block title %}Checkout — Furveda{% endblock %}
+
+{% block content %}
+<main class="checkout-page">
+  <div class="checkout-header">
+    <span class="checkout-tag">Secure Payment</span>
+    <h1 class="checkout-title">Complete<br/><em>Your Ritual</em></h1>
+  </div>
+
+  <div class="checkout-grid">
+    <div class="checkout-form-container">
+      <form action="{% url 'checkout' %}" method="POST" id="checkout-form">
+        {% csrf_token %}
+        <!-- Hidden input to hold cart payload if backend needs it -->
+        <input type="hidden" name="cart_payload" id="cart_payload">
+        
+        <h2 class="checkout-section-title">Shipping Information</h2>
+
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="first_name" name="first_name" required placeholder=" " autocomplete="off" />
+            <label for="first_name">First Name</label>
+            <div class="line-draw"></div>
+          </div>
+          <div class="form-group">
+            <input type="text" id="last_name" name="last_name" required placeholder=" " autocomplete="off" />
+            <label for="last_name">Last Name</label>
+            <div class="line-draw"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="email" id="email" name="email" required placeholder=" " autocomplete="off" value="{% if request.user.is_authenticated %}{{ request.user.email }}{% endif %}" />
+          <label for="email">Email Address</label>
+          <div class="line-draw"></div>
+        </div>
+
+        <div class="form-group">
+          <input type="text" id="address" name="address" required placeholder=" " autocomplete="off" />
+          <label for="address">Street Address</label>
+          <div class="line-draw"></div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <input type="text" id="city" name="city" required placeholder=" " autocomplete="off" />
+            <label for="city">City</label>
+            <div class="line-draw"></div>
+          </div>
+          <div class="form-group">
+            <input type="text" id="postal_code" name="postal_code" required placeholder=" " autocomplete="off" />
+            <label for="postal_code">Postal Code</label>
+            <div class="line-draw"></div>
+          </div>
+        </div>
+
+        <h2 class="checkout-section-title" style="margin-top: 40px;">Payment Method</h2>
+        <div class="payment-methods">
+          <label class="payment-method-label">
+            <input type="radio" name="payment_method" value="ONLINE" checked>
+            <span class="custom-radio"></span>
+            Online Payment (Cards, UPI, NetBanking)
+          </label>
+          <label class="payment-method-label">
+            <input type="radio" name="payment_method" value="COD">
+            <span class="custom-radio"></span>
+            Cash on Delivery
+          </label>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Sidebar Summary populated visually via JS -->
+    <div class="checkout-summary">
+      <h2 class="checkout-summary-title">Order Summary</h2>
+      
+      <div class="summary-list" id="checkout-item-list">
+        <!-- JS injects items here -->
+      </div>
+      
+      <div class="summary-totals">
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span id="checkout-subtotal">₹0.00</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>₹10.00</span>
+        </div>
+        <div class="summary-row total">
+          <span>Total</span>
+          <span id="checkout-total">₹0.00</span>
+        </div>
+      </div>
+      
+      <button type="button" class="btn-complete" id="place-order-btn">
+        Place Order
+      </button>
+
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let currentCart = JSON.parse(localStorage.getItem('furveda_cart')) || [];
+    
+    // Redirect if cart empty
+    if(currentCart.length === 0) {
+        window.location.href = "{% url 'shop' %}";
+        return;
+    }
+
+    const list = document.getElementById('checkout-item-list');
+    let subtotal = 0;
+    let html = '';
+    
+    currentCart.forEach(item => {
+        const itemSub = item.price * item.qty;
+        subtotal += itemSub;
+        html += `
+        <div class="summary-item">
+            <img src="${item.img}" alt="${item.name}" class="summary-item-img">
+            <div class="summary-item-info">
+                <div class="summary-item-name">${item.name}</div>
+                <div class="summary-item-qty">Qty: ${item.qty}</div>
+            </div>
+            <div class="summary-item-price">₹${itemSub.toFixed(2)}</div>
+        </div>
+        `;
+    });
+    
+    list.innerHTML = html;
+    
+    const shipping = 10.00;
+    const total = subtotal + shipping;
+    
+    document.getElementById('checkout-subtotal').textContent = '₹' + subtotal.toFixed(2);
+    document.getElementById('checkout-total').textContent = '₹' + total.toFixed(2);
+    
+    // Checkout logic
+    const placeOrderBtn = document.getElementById('place-order-btn');
+    placeOrderBtn.addEventListener('click', () => {
+        const form = document.getElementById('checkout-form');
+        if(!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        const formData = new FormData(form);
+        const data = {
+            first_name: formData.get('first_name'),
+            last_name: formData.get('last_name'),
+            email: formData.get('email'),
+            address: formData.get('address'),
+            city: formData.get('city'),
+            postal_code: formData.get('postal_code'),
+            payment_method: formData.get('payment_method'),
+            cart: currentCart
+        };
+        
+        placeOrderBtn.innerText = 'Processing...';
+        placeOrderBtn.disabled = true;
+
+        fetch("{% url 'create_order' %}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(res => {
+            if(res.status === 'success') {
+                if(res.method === 'COD') {
+                    localStorage.removeItem('furveda_cart');
+                    window.location.href = res.redirect_url;
+                } else if(res.method === 'ONLINE') {
+                    // Open Razorpay
+                    const options = {
+                        "key": "{{ razorpay_key_id }}",
+                        "amount": res.amount,
+                        "currency": res.currency,
+                        "name": "Furveda",
+                        "description": "Purchase from Furveda",
+                        "order_id": res.razorpay_order_id,
+                        "remember_customer": false,
+                        "handler": function (response) {
+                            // Verify Payment
+                            fetch("{% url 'verify_payment' %}", {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    order_id: res.order_id
+                                })
+                            })
+                            .then(vRes => vRes.json())
+                            .then(vData => {
+                                if (vData.status === 'error') {
+                                    alert("Backend Verification Failed: Signature Mismatch or Error");
+                                }
+                                localStorage.removeItem('furveda_cart');
+                                window.location.href = vData.redirect_url;
+                            });
+                        },
+                        "theme": {
+                            "color": "#1A1710"
+                        }
+                    };
+                    const rzp = new Razorpay(options);
+                    rzp.on('payment.failed', function (response){
+                        const errorMsg = "Razorpay Failed: " + response.error.description + " (Reason: " + response.error.reason + ")";
+                        placeOrderBtn.innerText = errorMsg;
+                        placeOrderBtn.style.backgroundColor = "red";
+                        placeOrderBtn.style.color = "white";
+                        // window.location.href = "{% url 'payment_failed_page' %}";
+                    });
+                    rzp.open();
+                    
+                    placeOrderBtn.innerText = 'Place Order';
+                    placeOrderBtn.disabled = false;
+                }
+            } else {
+                alert('Error: ' + res.message);
+                placeOrderBtn.innerText = 'Place Order';
+                placeOrderBtn.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Something went wrong. Please try again.');
+            placeOrderBtn.innerText = 'Place Order';
+            placeOrderBtn.disabled = false;
+        });
+    });
+});
+</script>
+{% endblock %}

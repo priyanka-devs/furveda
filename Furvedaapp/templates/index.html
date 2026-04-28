@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Furveda — Ayurvedic Pet Wellness{% endblock %}
+
+{% block content %}
+<div class="lux-home-wrapper">
+
+
+
+  <!-- Hero Section -->
+  <section class="lux-hero-v2">
+    <!-- Background Image with Gradient Overlay -->
+    <div class="hero-v2-bg">
+      <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=1600"
+        alt="Luxury Pet Wellness" class="hero-v2-img">
+      <div class="hero-v2-overlay"></div>
+    </div>
+
+    <!-- Content Container -->
+    <div class="hero-v2-content">
+      <!-- Main Content -->
+      <div class="hero-v2-main">
+        <h1 class="hero-v2-title">
+          <span class="title-line">We're Here</span>
+          <span class="title-highlight">With Ayurvedic</span>
+          <span class="title-highlight">Dog Food</span>
+          <span class="title-line">Wellness in</span>
+          <span class="title-line">Every Bite</span>
+        </h1>
+
+        <p class="hero-v2-subtitle">
+          Holistic Healing Through Nutrition
+        </p>
+
+        <p class="hero-v2-desc">
+          Meet Furveda – the perfect balance of Ayurvedic healing through pet food. We believe that true vitality starts
+          with what nourishes your companion's body.
+        </p>
+
+        <div class="hero-v2-ctas">
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="hero-v2-scroll">
+      <span class="scroll-dot"></span>
+      <span class="scroll-label">Scroll to discover</span>
+    </div>
+  </section>
+
+  <!-- Marquee -->
+  <div class="marquee-strip reveal">
+    <div class="marquee-inner" id="marquee-inner">
+      <span class="accent">✦ Small-batch crafted</span>
+      <span>Ethically Sourced Ingredients</span>
+      <span class="accent">✦ Ayurvedic Wisdom</span>
+      <span>No Artificial Additives</span>
+      <span class="accent">✦ Veterinary Approved</span>
+      <span>Sustainably Packaged</span>
+      <span class="accent">✦ Made with Love</span>
+      <span>Free Shipping Over ₹999</span>
+      <span class="accent">✦ Small-batch crafted</span>
+      <span>Ethically Sourced Ingredients</span>
+      <span class="accent">✦ Ayurvedic Wisdom</span>
+      <span>No Artificial Additives</span>
+      <span class="accent">✦ Veterinary Approved</span>
+      <span>Sustainably Packaged</span>
+      <span class="accent">✦ Made with Love</span>
+      <span>Free Shipping Over ₹999</span>
+    </div>
+  </div>
+
+  <!-- Expertise Section (Our Story) -->
+  <section class="lux-expertise">
+    <div class="lux-exp-grid reveal">
+      <div class="lux-exp-left">
+        <h2 class="lux-exp-title">We're Here With<br><em>Ayurvedic Dog Food</em></h2>
+        <h3
+          style="font-family: 'Syne', sans-serif; font-size: 28px; margin-top: 15px; margin-left: 20px; font-weight: 600;">
+          Wellness in Every Bite</h3>
+
+        <div class="lux-exp-dual-img">
+          <!-- Main Image (The Dog at Table) -->
+          <img src="{% static 'images/dog_table.jpg' %}" class="exp-main" alt="Dog at table">
+          <!-- Sub Image (Top down food ingredients) -->
+          <img src="{% static 'images/food_ingredients.jpg' %}" class="exp-sub" alt="Dog food ingredients">
+        </div>
+      </div>
+      <div class="lux-exp-right">
+        <div class="lux-exp-textblock">
+          <span
+            style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .2em; font-weight: 600; text-transform: uppercase;">[
+            OUR STORY ]</span>
+          <h4 style="font-family: 'Syne', sans-serif; font-size: 24px; font-weight: 600; margin: 20px 0;">Holistic
+            Healing Through Nutrition</h4>
+          <p class="lux-body">Meet Furveda — the perfect balance of Ayurvedic healing through pet food. We believe that
+            true vitality starts with what nourishes your companion's body limit.</p>
+          <p class="lux-body">We incorporate ancient Ayurvedic ingredients like ground turmeric, cold-pressed flaxseed,
+            and wild-harvested ashwagandha into our products to optimize pet health and lifelong wellbeing.</p>
+          <p class="lux-body">Every batch is meticulously evaluated by veterinarians and crafted with uncompromising
+            standards, ensuring that botanical intelligence is fully preserved. We are not just feeding pets; we are
+            nurturing their spirit.</p>
+          <a href="{% url 'about' %}" class="lux-link">READ THE MANIFESTO</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Curated Curatives (Categories) -->
+  <section class="lux-categories">
+    <div class="lux-cat-header reveal">
+      <h2 class="lux-section-heading">Curated Curatives.</h2>
+      <p>HOVER TO EXPAND OUR PHILOSOPHIES.</p>
+    </div>
+    <div class="lux-accordion-container reveal" style="transition-delay: 0.2s;">
+      {% for prod in featured_products|slice:":3" %}
+      <a href="{% url 'product_detail' prod.id %}" class="accordion-item">
+        <img
+          src="{% if prod.image %}{{ prod.image.url }}{% elif prod.image_url %}{{ prod.image_url }}{% else %}https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=400&q=80{% endif %}"
+          alt="{{ prod.name }}"
+          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;">
+        <div class="acc-overlay"></div>
+        <div class="acc-title-vertical">0{{ forloop.counter }} — {{ prod.name|upper|truncatechars:18 }}</div>
+        <div class="acc-content">
+          <h3 class="acc-title">{{ prod.name }}</h3>
+          <p class="acc-desc">Functional Dog Biscuits.</p>
+          <span class="acc-btn" style="border: 1px solid white;">SHOP NOW</span>
+        </div>
+      </a>
+      {% empty %}
+      <!-- Static fallback if no products found -->
+      <a href="{% url 'shop' %}" class="accordion-item" style="background-color: #f7f1e9;">
+        <div class="acc-overlay"></div>
+        <div class="acc-title-vertical">01 — ANTI-AGEING FU...</div>
+        <div class="acc-content">
+          <h3 class="acc-title">Anti-Ageing</h3>
+          <p class="acc-desc">Functional Dog Biscuits.</p>
+          <span class="acc-btn" style="border: 1px solid white;">SHOP NOW</span>
+        </div>
+      </a>
+      <a href="{% url 'shop' %}" class="accordion-item" style="background-color: #f7f1e9;">
+        <div class="acc-overlay"></div>
+        <div class="acc-title-vertical">02 — BONE & JOINT S...</div>
+        <div class="acc-content">
+          <h3 class="acc-title">Bone & Joint Support</h3>
+          <p class="acc-desc">Functional Dog Biscuits.</p>
+          <span class="acc-btn" style="border: 1px solid white;">SHOP NOW</span>
+        </div>
+      </a>
+      <a href="{% url 'shop' %}" class="accordion-item" style="background-color: #f7f1e9;">
+        <div class="acc-overlay"></div>
+        <div class="acc-title-vertical">03 — SHINY SKIN & C...</div>
+        <div class="acc-content">
+          <h3 class="acc-title">Shiny Skin & Coat</h3>
+          <p class="acc-desc">Functional Dog Biscuits.</p>
+          <span class="acc-btn" style="border: 1px solid white;">SHOP NOW</span>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </section>
+
+</div>
+{% endblock %}

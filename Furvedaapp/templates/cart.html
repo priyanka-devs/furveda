@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
+
+
+{% block title %}Shopping Cart - Furveda{% endblock %}
+
+{% block content %}
+
+
+
+
+<div class="cart-page-wrapper">
+  
+  <div id="full-cart-container" style="display:none;">
+    <h1 class="cart-header-title">Your Ritual</h1>
+    
+    <div class="cart-layout">
+      <!-- LEFT LIST -->
+      <div>
+        <div class="cart-items-container" id="cart-list">
+          <!-- JS INJECTS CARDS HERE -->
+        </div>
+        
+        <div class="cart-footer-actions">
+          <a href="{% url 'home' %}" class="back-shop-btn">Continue Exploring</a>
+        </div>
+      </div>
+
+      <!-- RIGHT SUMMARY -->
+      <div class="cart-summary-area">
+        <div class="summary-title">Order Summary</div>
+        
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span class="summary-row-bold" id="summ-subtotal">₹0.00</span>
+        </div>
+        
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span class="summary-row-bold" id="summ-shipping">₹10.00</span>
+        </div>
+        
+        <div class="promo-acc">
+          <span>Have a Promo Code?</span>
+          <span>+</span>
+        </div>
+        
+        <div class="summary-total">
+          <span class="summary-total-label">Total</span>
+          <span id="summ-total">₹0.00</span>
+        </div>
+        
+        <button class="btn-checkout" onclick="proceedToCheckoutAction()">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div id="empty-cart-container" class="empty-state-wrap" style="display:none;">
+    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"></path></svg>
+    <h2>Your ritual is empty.</h2>
+    <p>Discover our range of Ayurvedic elixirs and treats.</p>
+    <a href="{% url 'home' %}" class="back-shop-btn" style="display:inline-block; margin-top:10px;">Return to Shop</a>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/cart.js' %}"></script>
+
+
+{% endblock %}

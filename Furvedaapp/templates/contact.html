@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/contact.css' %}">
+{% endblock %}
+
+
+{% block title %}Contact Us — Furveda{% endblock %}
+
+{% block content %}
+
+
+<main class="contact-page">
+  <div class="contact-grid">
+    
+    <div class="contact-visual">
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      
+      <div class="contact-visual-content">
+        <span class="contact-tag">Connectivity</span>
+        <h1 class="contact-title">Get in<br/><em>Touch</em></h1>
+        
+        <div class="contact-info">
+          <div class="contact-block">
+            <h3>The Apothecary</h3>
+            <p>Raheja Plaza, B-101<br/>Lal Bahadur Shastri Marg<br/>Mumbai, MH 400086</p>
+          </div>
+          <div class="contact-block">
+            <h3>Electronic Mail</h3>
+            <p><a href="mailto:support@furveda.com" class="contact-link">support@furveda.com</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-form-side">
+      <div class="form-container">
+        
+        <p style="font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .25em; text-transform: uppercase; color: rgba(26,23,16,.3); margin-bottom: 64px; animation: itemUp 1s .3s backwards;">Fill in the details below to reach our artisans.</p>
+
+        <form action="{% url 'contact' %}" method="POST" id="lux-contact-form">
+          {% csrf_token %}
+          
+          <div class="form-group">
+            <input type="text" id="name" name="name" required placeholder=" " autocomplete="off" />
+            <label for="name">Your Name</label>
+            <div class="line-draw"></div>
+          </div>
+          
+          <div class="form-group">
+            <input type="email" id="email" name="email" required placeholder=" " autocomplete="off" />
+            <label for="email">Email Address</label>
+            <div class="line-draw"></div>
+          </div>
+
+          <div class="form-group">
+            <input type="text" id="subject" name="subject" required placeholder=" " autocomplete="off" />
+            <label for="subject">Inquiry Subject</label>
+            <div class="line-draw"></div>
+          </div>
+          
+          <div class="form-group">
+            <textarea id="message" name="message" required placeholder=" " rows="1"></textarea>
+            <label for="message">Your Message</label>
+            <div class="line-draw"></div>
+          </div>
+          
+          <div class="submit-wrap" id="magnetic-wrap">
+            <button type="submit" class="submit-btn" id="submitBtn">
+              <span>Send <span class="arrow" style="transition: transform 0.4s;">→</span></span>
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+    
+  </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/contact.js' %}"></script>
+
+
+{% endblock %}

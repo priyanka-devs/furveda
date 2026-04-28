@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&family=Lilita+One&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=2.3">
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- Nav -->
+  <nav id="main-nav">
+    <a class="nav-logo" href="{% url 'home' %}"><img src="{% static 'img/home/FURVEDA.png' %}" width="120" height="auto"
+        alt="Furveda Logo" /></a>
+    <ul class="nav-links">
+      <li><a href="{% url 'home' %}" class="active">Home</a>
+      </li>
+      <li><a href="{% url 'shop' %}">Shop</a>
+      </li>
+      <li><a href="{% url 'about' %}">About</a></li>
+      <li><a href="{% url 'contact' %}">Contact</a></li>
+    </ul>
+    <div class="nav-actions">
+      {% if request.user.is_authenticated %}
+      <button class="nav-login-btn" onclick="window.location.href='{% url 'logout' %}'">Logout</button>
+      {% else %}
+      <button class="nav-login-btn" onclick="window.location.href='{% url 'login' %}'">Login</button>
+      {% endif %}
+      <button id="cart-btn" onclick="openCart()">
+        Cart
+        <span id="cart-badge"></span>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  {% block content %}
+  {% endblock %}
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <p class="footer-brand-name">Fur<em>veda</em></p>
+        <p class="footer-brand-desc">Rooted in Ayurveda, grown for pets. We believe in the healing power of plants.</p>
+      </div>
+      <div>
+        <p class="footer-col-title">Support</p>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Shipping & Returns</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Company</p>
+        <ul class="footer-links">
+          <li><a href="{% url 'about' %}">Our Story</a></li>
+          <li><a href="#">Wholesale</a></li>
+          <li><a href="{% url 'contact' %}">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="footer-col-title">Follow</p>
+        <ul class="footer-links">
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">Pinterest</a></li>
+          <li><a href="#">Newsletter</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 The Furveda Apothecary. All rights reserved.</span>
+      <span class="footer-copy">Rooted in Ayurveda — Grown for Pets</span>
+    </div>
+  </footer>
+
+  <!-- Cart -->
+  <div class="cart-overlay" id="cart-overlay" onclick="closeCart()"></div>
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-head">
+      <span class="cart-title">Your Cart</span>
+      <button class="cart-close" onclick="closeCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cart-items-wrap">
+      <div class="empty-cart" id="empty-cart">
+        <div class="empty-cart-icon">∅</div>
+        <p>Your cart is empty</p>
+      </div>
+    </div>
+    <div class="cart-foot">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Total</span>
+        <span class="cart-total-num" id="cart-total">₹0</span>
+      </div>
+      <button class="checkout-btn" id="checkout-btn" disabled onclick="handleCheckout()">
+        Proceed to Checkout →
+      </button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Scripts -->
+  {% block extra_js %}{% endblock %}
+  <script src="{% static 'js/scripts.js' %}"></script>
+
+  {% if messages %}
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      {% for message in messages %}
+      setTimeout(() => {
+        if (typeof showToast === 'function') {
+          showToast("{{ message|escapejs }}");
+        } else {
+          alert("{{ message|escapejs }}");
+        }
+      }, 500 * ({{ forloop.counter }} - 1));
+    {% endfor %}
+  });
+  </script>
+  {% endif %}
+</body>
+
+</html>

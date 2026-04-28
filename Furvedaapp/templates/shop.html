@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">— Est. 2022 · Ayurvedic Botanicals</p>
+    <h1 class="hero-title">The Art of<br/><em>Natural</em><br/>Pet Care</h1>
+    <p class="hero-desc">Ancient wisdom, small-batch crafted. Our botanical formulas honour the healing intelligence of nature — for your companion's lifelong vitality.</p>
+    <a class="hero-cta" href="#shop">
+      Explore Collection
+      <span class="hero-cta-arrow">→</span>
+    </a>
+    <div class="hero-scroll">Scroll to discover</div>
+  </div>
+  <div class="hero-right">
+    <img alt="Artisan dog treats with botanical herbs" src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&q=80&w=1000"/>
+    <div class="hero-badge">
+      <span class="hero-badge-num">11</span>
+      <span class="hero-badge-label">Botanical formulas</span>
+    </div>
+  </div>
+</section>
+ 
+<!-- Marquee -->
+<div class="marquee-strip">
+  <div class="marquee-inner" id="marquee-inner">
+    <span class="accent">✦ Small-batch crafted</span>
+    <span>Ethically Sourced Ingredients</span>
+    <span class="accent">✦ Ayurvedic Wisdom</span>
+    <span>No Artificial Additives</span>
+    <span class="accent">✦ Veterinary Approved</span>
+    <span>Sustainably Packaged</span>
+    <span class="accent">✦ Made with Love</span>
+    <span>Free Shipping Over ₹999</span>
+    <span class="accent">✦ Small-batch crafted</span>
+    <span>Ethically Sourced Ingredients</span>
+    <span class="accent">✦ Ayurvedic Wisdom</span>
+    <span>No Artificial Additives</span>
+    <span class="accent">✦ Veterinary Approved</span>
+    <span>Sustainably Packaged</span>
+    <span class="accent">✦ Made with Love</span>
+    <span>Free Shipping Over ₹999</span>
+  </div>
+</div>
+ 
+<!-- Shop -->
+<div id="shop" class="shop-layout">
+ 
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-label">Collections</p>
+      <ul class="filter-list">
+        <li><button class="filter-btn active" data-cat="all">All Products <span class="count">11</span></button></li>
+        <li><button class="filter-btn" data-cat="biscuits">Ayurvedic Biscuits <span class="count">04</span></button></li>
+        <li><button class="filter-btn" data-cat="chews">Natural Chews <span class="count">05</span></button></li>
+        <li><button class="filter-btn" data-cat="herbal">Herbal Treats <span class="count">02</span></button></li>
+      </ul>
+    </div>
+ 
+    <div class="sidebar-section">
+      <div class="sidebar-newsletter">
+        <p>Join the Furvy Circle — get Ayurvedic tips & 10% off your first order.</p>
+        <input type="email" placeholder="your@email.com"/>
+        <button>Subscribe →</button>
+      </div>
+    </div>
+  </aside>
+ 
+  <!-- Products -->
+  <div class="products-area">
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <span class="result-count" id="result-count">11</span>
+        <span class="result-label">Products</span>
+      </div>
+      <div class="sort-wrap">
+        <label for="sort-select">Sort</label>
+        <select id="sort-select">
+          <option value="featured">Featured</option>
+          <option value="price-asc">Price ↑</option>
+          <option value="price-desc">Price ↓</option>
+        </select>
+      </div>
+    </div>
+    <div class="product-grid" id="product-grid"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.djangoProducts = {{ products_json|safe }};
+</script>
+{% endblock %}

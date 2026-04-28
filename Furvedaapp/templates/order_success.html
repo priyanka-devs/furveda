@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+  .success-page {
+    padding: 180px 5% 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 85vh;
+  }
+  .success-container {
+    text-align: center;
+    max-width: 600px;
+    background: rgba(255,255,255,0.4);
+    backdrop-filter: blur(20px);
+    padding: 60px 40px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.5);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.02);
+    animation: fadeUp 1s ease forwards;
+  }
+  @keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--moss);
+    color: var(--sand);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 30px;
+    font-size: 24px;
+  }
+  .success-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 40px;
+    color: var(--moss);
+    margin-bottom: 20px;
+    line-height: 1.1;
+  }
+  .success-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: rgba(26,23,16,0.6);
+    line-height: 1.6;
+    margin-bottom: 40px;
+  }
+  .btn-home {
+    display: inline-block;
+    padding: 15px 40px;
+    background: transparent;
+    color: var(--moss);
+    border: 1px solid var(--moss);
+    border-radius: 50px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .btn-home:hover {
+    background: var(--moss);
+    color: var(--sand);
+  }
+</style>
+{% endblock %}
+
+{% block title %}Order Confirmed — Furveda{% endblock %}
+
+{% block content %}
+<main class="success-page">
+  <div class="success-container">
+    <div class="success-icon">✓</div>
+    <h1 class="success-title">Your Ritual<br/>is Confirmed</h1>
+    <p class="success-subtitle">Thank you for bringing Furveda into your home. Your order has been placed successfully and our artisans are preparing it with care. You will receive an email confirmation shortly.</p>
+    
+    {% if order %}
+    <div style="text-align: left; background: rgba(255,255,255,0.5); padding: 20px; border-radius: 10px; margin-bottom: 30px; font-family: 'DM Mono', monospace; font-size: 14px; color: var(--moss);">
+      <p style="margin-bottom: 8px;"><strong>Order ID:</strong> #{{ order.id }}</p>
+      <p style="margin-bottom: 8px;"><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+      <p style="margin-bottom: 8px;"><strong>Payment Status:</strong> {{ order.payment_status }}</p>
+      <p style="margin-bottom: 0;"><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+    </div>
+    {% endif %}
+
+    <a href="{% url 'home' %}" class="btn-home">Return to Home</a>
+  </div>
+</main>
+{% endblock %}

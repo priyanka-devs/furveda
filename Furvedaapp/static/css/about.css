@@ -1,0 +1,149 @@
+/* Ultra Premium About Page Overrides */
+.about-page { padding-top: 0; min-height: 100vh; overflow-x: hidden; background: var(--cream); }
+.about-hero {
+  min-height: calc(100vh - 72px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; color: var(--cream);
+  margin-top: 72px;
+  position: relative;
+  clip-path: inset(0 0 0 0 round var(--radius-md) var(--radius-md) var(--radius-lg) var(--radius-lg));
+}
+.about-hero-bg { position: fixed; inset: 0; z-index: -2; }
+.about-hero-bg img {
+  width: 100%; height: 100%; object-fit: cover;
+  filter: brightness(0.55) saturate(1.1);
+  transform: scale(1.1);
+  animation: cinematicPan 30s linear infinite alternate;
+}
+@keyframes cinematicPan {
+  0% { transform: scale(1.1) translate(0, 0); }
+  100% { transform: scale(1.2) translate(-2%, 2%); }
+}
+.about-overlay-gradient {
+  position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(to bottom, rgba(26,23,16,0.1) 0%, rgba(26,23,16,0.95) 100%);
+}
+.about-hero-content {
+  max-width: 1100px; padding: 0 40px;
+  animation: heroUp 1.8s cubic-bezier(.16, 1, .3, 1) forwards;
+}
+@keyframes heroUp {
+  0% { opacity: 0; transform: translateY(80px); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.about-tag {
+  font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: .3em;
+  text-transform: uppercase; color: var(--sand); margin-bottom: 32px;
+  display: inline-block; border-bottom: 1px solid rgba(201,185,138,0.5); padding-bottom: 8px;
+}
+.about-title {
+  font-family: 'Cormorant Garamond', serif; font-size: clamp(50px, 10vw, 130px);
+  font-weight: 300; line-height: 1.1; margin-bottom: 40px; color: var(--cream);
+  letter-spacing: -0.02em;
+}
+.about-title em { font-style: italic; color: var(--sand); font-weight: 400; }
+.scroll-indicator {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  opacity: 0.8; z-index: 10;
+}
+.scroll-indicator .line { 
+  width: 1px; height: 60px; position: relative; overflow: hidden; background: rgba(201,185,138,0.2); 
+}
+.scroll-indicator .line::after {
+  content: ''; position: absolute; top: -100%; left: 0; width: 100%; height: 100%; background: var(--sand);
+  animation: scrollDown 2s cubic-bezier(.16, 1, .3, 1) infinite;
+}
+@keyframes scrollDown {
+  0% { top: -100%; }
+  50% { top: 0; }
+  100% { top: 100%; }
+}
+.scroll-indicator .text { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: .25em; text-transform: uppercase; color: var(--sand); }
+
+/* Manifesto */
+.about-manifesto {
+  position: relative; z-index: 10;
+  padding: 160px 48px 120px; background: var(--cream);
+  display: flex; justify-content: center; text-align: center;
+}
+.manifesto-content { max-width: 1000px; }
+.manifesto-lead {
+  font-family: 'Cormorant Garamond', serif; font-size: clamp(36px, 5vw, 64px); font-weight: 400;
+  color: var(--moss); margin-bottom: 64px; line-height: 1.2; letter-spacing: -0.01em;
+}
+/* Text Reveal Span Setup */
+.reveal-word { display: inline-block; overflow: hidden; vertical-align: bottom; line-height: 1.2; }
+.reveal-word span { 
+  display: inline-block; transform: translateY(110%); 
+  transition: transform 1.2s cubic-bezier(.16, 1, .3, 1); 
+}
+.manifesto-lead.visible .reveal-word span { transform: translateY(0); }
+
+.manifesto-cols {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; text-align: left;
+}
+.manifesto-text {
+  font-family: 'DM Mono', monospace; font-size: 14px; line-height: 2;
+  color: var(--ink); opacity: 0.75;
+}
+
+/* Static Grid Section */
+.horizontal-scroll-wrapper {
+  position: relative; z-index: 10;
+  background: var(--ink);
+  padding: 120px 0;
+}
+.sticky-track {
+  width: 100%;
+}
+.h-scroll-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+  padding: 0 48px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+
+.h-card {
+  background: var(--moss); color: var(--cream);
+  padding: 64px 48px; border-radius: 24px;
+  position: relative; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.h-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at top right, rgba(201,185,138,0.1), transparent 70%);
+}
+.h-card-num {
+  font-family: 'Syne', sans-serif; font-size: 100px; font-weight: 800;
+  color: rgba(245,240,232,0.05); position: absolute; top: 16px; right: 24px; line-height: 1;
+}
+.h-card-title {
+  font-family: 'Cormorant Garamond', serif; font-size: 48px; font-weight: 300;
+  color: var(--sand); margin-bottom: 24px; position: relative; z-index: 2; line-height: 1.1;
+}
+.h-card-desc {
+  font-family: 'DM Mono', monospace; font-size: 13px; line-height: 1.8;
+  opacity: 0.8; position: relative; z-index: 2;
+}
+
+/* Slim Marquee */
+.about-marquee {
+  position: relative; z-index: 10;
+  background: var(--ink); color: var(--sand); padding: 12px 0; overflow: hidden;
+  display: flex; align-items: center;
+  border-radius: var(--radius-md);
+  margin: 8px 0; /* Adding a tiny margin to let the corners distinctively show */
+}
+.about-marquee .marquee-inner { animation: marquee 25s linear infinite; display: inline-flex; white-space: nowrap; align-items: center; }
+.about-marquee .marquee-inner span {
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; margin: 0 24px; opacity: 0.8; line-height: 1;
+}
+.about-marquee .marquee-inner span.accent { opacity: 1; color: var(--cream); }
+
+@media (max-width: 900px) {
+  .manifesto-cols { grid-template-columns: 1fr; gap: 32px; }
+  .h-card { padding: 48px 32px; }
+}

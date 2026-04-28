@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+
+
+{% block title %}About Us — Furveda{% endblock %}
+
+{% block content %}
+
+
+<main class="about-page">
+  <section class="about-hero">
+    <div class="about-hero-bg">
+      <img src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&q=80&w=2000" alt="Happy dogs running in nature">
+      <div class="about-overlay-gradient"></div>
+    </div>
+    <div class="about-hero-content">
+      <span class="about-tag">Our Philosophy</span>
+      <h1 class="about-title">Ayurvedic Pet Care<br/><em>Wellness</em> in Every Bite</h1>
+    </div>
+    <div class="scroll-indicator">
+      <span class="line"></span>
+      <span class="text">Scroll Down</span>
+    </div>
+  </section>
+
+  <div class="marquee-strip" style="z-index: 10; position: relative;">
+    <div class="marquee-inner">
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+      <span class="accent">✦ Authentic Ayurvedic</span>
+      <span>Holistic Nutrition</span>
+    </div>
+  </div>
+
+  <section class="about-manifesto">
+    <div class="manifesto-content">
+      <p class="manifesto-lead" id="manifesto-lead">
+        The concept of Furveda emerged from our unconditional love for our dogs.
+      </p>
+      
+      <div class="manifesto-cols">
+        <p class="manifesto-text reveal-item">We wanted to ensure they receive wholesome nutrition sourced exclusively from natural ingredients that visibly support strength and vitality, inside and out. We reject shortcuts, fillers, and artificial additive methodologies.</p>
+        <p class="manifesto-text reveal-item">Furveda is crafted using high-quality, human-grade ingredients, thoughtfully balanced with Ayurvedic goodness to keep your dogs robust, happy, and vibrantly healthy throughout their life — well into their golden years.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="horizontal-scroll-wrapper" id="h-scroll-wrap">
+    <div class="sticky-track">
+      <div class="h-scroll-container" id="h-scroll-container">
+        
+        <div class="h-card">
+          <span class="h-card-num">01</span>
+          <h3 class="h-card-title">Holistic Healing</h3>
+          <p class="h-card-desc">Intricately prepared recipes that nourish their health from the inside out, addressing not just physical ailments but promoting a sense of overall calm and balance.</p>
+        </div>
+        
+        <div class="h-card">
+          <span class="h-card-num">02</span>
+          <h3 class="h-card-title">Human-Grade Elements</h3>
+          <p class="h-card-desc">Made with premium, ethically sourced human-grade ingredients. If we wouldn't eat it, we certainly wouldn't feed it to them. Zero compromises on safety.</p>
+        </div>
+
+        <div class="h-card">
+          <span class="h-card-num">03</span>
+          <h3 class="h-card-title">Ayurvedic Goodness</h3>
+          <p class="h-card-desc">Contains a highly balanced Ayurvedic blend of botanical herbs like Ashwagandha, Turmeric, and Brahmi designed for optimal systemic well-being.</p>
+        </div>
+
+        <div class="h-card">
+          <span class="h-card-num">04</span>
+          <h3 class="h-card-title">Functional Formulas</h3>
+          <p class="h-card-desc">Our formulas do more than satiate; they actively enrich their lives, promoting shinier coats, stronger joints, and healthier digestion mechanics.</p>
+        </div>
+
+        <div class="h-card">
+          <span class="h-card-num">05</span>
+          <h3 class="h-card-title">Small Batch Artisan</h3>
+          <p class="h-card-desc">Prepared in artisan small batches right here in our kitchens to maintain the highest quality, freshness, and nutritional integrity.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/about.js' %}"></script>
+
+
+{% endblock %}
