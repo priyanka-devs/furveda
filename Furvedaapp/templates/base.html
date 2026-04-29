@@ -18,18 +18,36 @@
 
   <!-- Nav -->
   <nav id="main-nav">
-    <a class="nav-logo" href="{% url 'home' %}"><img src="{% static 'img/home/FURVEDA.png' %}" width="120" height="auto"
-        alt="Furveda Logo" /></a>
-    <ul class="nav-links">
-      <li><a href="{% url 'home' %}" class="active">Home</a>
-      </li>
-      <li><a href="{% url 'shop' %}">Shop</a>
-      </li>
-      <li><a href="{% url 'about' %}">About</a></li>
-      <li><a href="{% url 'contact' %}">Contact</a></li>
-    </ul>
+    <div class="nav-left" style="display: flex; align-items: center; gap: 40px;">
+      <a class="nav-logo" href="{% url 'home' %}"><img src="{% static 'img/home/FURVEDA.png' %}" width="120"
+          height="auto" alt="Furveda Logo" /></a>
+      <ul class="nav-links" style="gap: 20px;">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'shop' %}">Shop</a></li>
+        <li><a href="{% url 'about' %}">About</a></li>
+        <li><a href="{% url 'contact' %}">Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="nav-middle">
+      <form action="{% url 'shop' %}" method="GET" class="nav-search-form"
+        style="display: flex; align-items: center; border: 1px solid rgba(26, 23, 16, 0.2); border-radius: var(--radius-pill); padding: 8px 20px; background: rgba(255, 255, 255, 0.4); transition: border-color 0.3s;">
+        <input type="text" name="q" placeholder="Search..." value="{{ request.GET.q|default:'' }}"
+          style="border: none; background: transparent; outline: none; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--ink); width: 15cm; text-transform: uppercase; letter-spacing: 0.1em;">
+        <button type="submit"
+          style="background: transparent; border: none; cursor: none; color: var(--ink); display: flex; align-items: center; opacity: 0.7; padding: 0;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+    </div>
+
     <div class="nav-actions">
-      {% if request.user.is_authenticated %}
+      {% if user.is_authenticated %}
+      <button class="nav-login-btn" onclick="window.location.href='{% url 'profile' %}'">Profile</button>
       <button class="nav-login-btn" onclick="window.location.href='{% url 'logout' %}'">Logout</button>
       {% else %}
       <button class="nav-login-btn" onclick="window.location.href='{% url 'login' %}'">Login</button>
@@ -125,9 +143,9 @@
         } else {
           alert("{{ message|escapejs }}");
         }
-      }, 500 * ({{ forloop.counter }} - 1));
+      }, 500 * {{ forloop.counter0 }});
     {% endfor %}
-  });
+    });
   </script>
   {% endif %}
 </body>

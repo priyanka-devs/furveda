@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Track Order #{{ order.id }} — Furveda{% endblock %}
+
+{% block content %}
+<style>
+  .track-container {
+    max-width: 900px;
+    margin: 120px auto 60px;
+    padding: 0 40px;
+    min-height: 60vh;
+  }
+  .track-header {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-weight: 300;
+  }
+  .track-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--clay);
+    margin-bottom: 40px;
+  }
+  
+  .tracker-card {
+    background: var(--cream);
+    border: 1px solid rgba(26, 23, 16, 0.1);
+    border-radius: var(--radius-md);
+    padding: 40px;
+    margin-bottom: 40px;
+  }
+  
+  /* Progress Bar Container */
+  .progress-track {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+  /* The Background Line */
+  .progress-track::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(26, 23, 16, 0.1);
+    z-index: 1;
+    border-radius: 2px;
+  }
+  
+  /* The Active Line */
+  .progress-track-fill {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    height: 4px;
+    background: var(--gold);
+    z-index: 2;
+    transition: width 1s ease-in-out;
+    border-radius: 2px;
+  }
+  
+  .step {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60px;
+  }
+  
+  .step-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--cream);
+    border: 3px solid rgba(26, 23, 16, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.5s ease-in-out;
+  }
+  
+  .step.active .step-icon {
+    border-color: var(--gold);
+    background: var(--gold);
+    box-shadow: 0 0 0 5px rgba(184, 147, 58, 0.2);
+  }
+  
+  .step.completed .step-icon {
+    border-color: var(--moss);
+    background: var(--moss);
+  }
+  
+  .step-icon inner-dot {
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  
+  .step.active .step-icon inner-dot, 
+  .step.completed .step-icon inner-dot {
+    opacity: 1;
+  }
+  
+  /* Current Step Pulsing Animation */
+  .step.active .step-icon {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 rgba(184, 147, 58, 0.4);
+    }
+    70% {
+      box-shadow: 0 0 0 10px rgba(184, 147, 58, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(184, 147, 58, 0);
+    }
+  }
+  
+  .step-label {
+    margin-top: 15px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(26, 23, 16, 0.5);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  
+  .step.active .step-label {
+    color: var(--ink);
+    font-weight: 600;
+  }
+  
+  .step.completed .step-label {
+    color: var(--moss);
+  }
+  
+  .order-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  
+  .details-box {
+    background: var(--cream);
+    border: 1px solid rgba(26, 23, 16, 0.1);
+    border-radius: var(--radius-md);
+    padding: 30px;
+  }
+  
+  .details-box h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--ink);
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+  
+  .details-box p {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.8;
+    margin-bottom: 10px;
+  }
+  
+  .details-box p span {
+    color: var(--clay);
+    font-weight: 500;
+  }
+  
+  .back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--clay);
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+  }
+  
+  .back-link:hover {
+    color: var(--ink);
+  }
+  
+  @media (max-width: 768px) {
+    .order-details-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .progress-track {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 30px;
+      padding-left: 20px;
+    }
+    
+    .progress-track::before {
+      top: 0;
+      bottom: 0;
+      left: 35px;
+      width: 4px;
+      height: auto;
+    }
+    
+    .progress-track-fill {
+      top: 0;
+      left: 35px;
+      width: 4px;
+      height: 0; /* Updated dynamically via JS */
+      transition: height 1s ease-in-out;
+    }
+    
+    .step {
+      flex-direction: row;
+      width: 100%;
+      gap: 20px;
+    }
+    
+    .step-label {
+      margin-top: 0;
+    }
+  }
+</style>
+
+<div class="track-container">
+  <a href="{% url 'my_orders' %}" class="back-link">← Back to My Orders</a>
+  <h1 class="track-header">Track Order #{{ order.id }}</h1>
+  <p class="track-subtitle">Placed on {{ order.created_at|date:"M d, Y" }}</p>
+  
+  <div class="tracker-card">
+    <div class="progress-track" id="progress-track">
+      <div class="progress-track-fill" id="progress-fill"></div>
+      
+      {% for status in statuses %}
+        {% if forloop.counter0 < current_status_index %}
+          <div class="step completed">
+        {% elif forloop.counter0 == current_status_index %}
+          <div class="step active">
+        {% else %}
+          <div class="step">
+        {% endif %}
+          <div class="step-icon"><inner-dot></inner-dot></div>
+          <div class="step-label">{{ status }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  
+  <div class="order-details-grid">
+    <div class="details-box">
+      <h3>Shipping Address</h3>
+      <p>{{ order.first_name }} {{ order.last_name }}</p>
+      <p>{{ order.address }}</p>
+      <p>{{ order.city }}, {{ order.postal_code }}</p>
+      <p><span>Email:</span> {{ order.email }}</p>
+    </div>
+    
+    <div class="details-box">
+      <h3>Order Summary</h3>
+      <p><span>Status:</span> {{ order.status }}</p>
+      {% if order.tracking_id %}
+        <p><span>Tracking ID:</span> {{ order.tracking_id }}</p>
+      {% endif %}
+      {% if order.estimated_delivery_date %}
+        <p><span>Est. Delivery:</span> {{ order.estimated_delivery_date|date:"M d, Y" }}</p>
+      {% endif %}
+      <p><span>Payment Method:</span> {{ order.payment_method }}</p>
+      <p><span>Payment Status:</span> {{ order.payment_status }}</p>
+      <p><span>Total Amount:</span> ₹{{ order.total_amount }}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const currentIndex = {{ current_status_index }};
+    const totalSteps = {{ statuses|length }};
+    const fillBar = document.getElementById("progress-fill");
+    
+    if (currentIndex >= 0) {
+      if (window.innerWidth <= 768) {
+        const percentage = (currentIndex / (totalSteps - 1)) * 100;
+        fillBar.style.height = `${percentage}%`;
+        fillBar.style.width = '4px';
+      } else {
+        const percentage = (currentIndex / (totalSteps - 1)) * 100;
+        fillBar.style.width = `${percentage}%`;
+        fillBar.style.height = '4px';
+      }
+    } else {
+      fillBar.style.width = '0%';
+      fillBar.style.height = '0%';
+    }
+  });
+</script>
+{% endblock %}

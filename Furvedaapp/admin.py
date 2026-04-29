@@ -27,9 +27,10 @@ class OrderItemInline(admin.TabularInline):
     extra = 0
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'first_name', 'last_name', 'email', 'payment_method', 'payment_status', 'total_amount', 'created_at')
-    list_filter = ('payment_status', 'payment_method', 'created_at')
-    search_fields = ('first_name', 'last_name', 'email', 'razorpay_order_id')
+    list_display = ('id', 'first_name', 'last_name', 'email', 'status', 'payment_method', 'payment_status', 'total_amount', 'created_at')
+    list_filter = ('status', 'payment_status', 'payment_method', 'created_at')
+    search_fields = ('first_name', 'last_name', 'email', 'razorpay_order_id', 'tracking_id')
+    list_editable = ('status',)
     inlines = [OrderItemInline]
 
 admin.site.register(Order, OrderAdmin)

@@ -8,6 +8,12 @@ from django.utils import timezone
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone_number = models.CharField(max_length=15, blank=True, null=True)
+    address_street = models.CharField(max_length=255, blank=True, null=True)
+    address_apt = models.CharField(max_length=50, blank=True, null=True)
+    address_city = models.CharField(max_length=100, blank=True, null=True)
+    address_state = models.CharField(max_length=100, blank=True, null=True)
+    address_postal = models.CharField(max_length=20, blank=True, null=True)
+    address_country = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f"{self.user.username}'s Profile"
@@ -105,6 +111,18 @@ class Order(models.Model):
     razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)
     razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)
     razorpay_signature = models.CharField(max_length=255, blank=True, null=True)
+    
+    ORDER_STATUS_CHOICES = (
+        ('Order Confirmation', 'Order Confirmation'),
+        ('Processing', 'Processing'),
+        ('Shipped', 'Shipped'),
+        ('Out for Delivery', 'Out for Delivery'),
+        ('Delivered', 'Delivered'),
+        ('Cancelled', 'Cancelled'),
+    )
+    status = models.CharField(max_length=50, choices=ORDER_STATUS_CHOICES, default='Order Confirmation')
+    tracking_id = models.CharField(max_length=100, blank=True, null=True)
+    estimated_delivery_date = models.DateField(blank=True, null=True)
     
     created_at = models.DateTimeField(auto_now_add=True)
 

@@ -1,0 +1,575 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile — Furveda{% endblock %}
+
+{% block extra_head %}
+<style>
+  .profile-wrapper {
+    margin-top: 72px;
+    min-height: calc(100vh - 72px);
+    background-color: #8da38a;
+    /* Sage green background */
+    padding: 80px 48px;
+  }
+
+  .profile-header {
+    text-align: center;
+    margin-bottom: 80px;
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .profile-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(48px, 6vw, 72px);
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 16px;
+    line-height: 1.1;
+  }
+
+  .profile-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--clay);
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.8fr;
+    gap: 64px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .profile-section {
+    background: #ffffff;
+    /* Solid white cards */
+    border-radius: 24px;
+    padding: 48px;
+    border: 1px solid rgba(26, 23, 16, 0.08);
+    box-shadow: 0 10px 30px rgba(26, 23, 16, 0.04);
+    animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  }
+
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title::before {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  /* Form Styles */
+  .profile-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 24px;
+  }
+
+  .profile-form-group {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .profile-form-group.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .profile-form-group label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--clay);
+    margin-bottom: 8px;
+    transition: color 0.3s;
+  }
+
+  .profile-form-group input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(26, 23, 16, 0.2);
+    padding: 8px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--ink);
+    transition: all 0.3s;
+    outline: none;
+    border-radius: 0;
+  }
+
+  .profile-form-group input:focus {
+    border-bottom-color: var(--gold);
+  }
+
+  .save-btn {
+    grid-column: 1 / -1;
+    background: #b85c49;
+    /* Terracotta brown */
+    color: #ffffff;
+    border: 1px solid #b85c49;
+    padding: 16px 32px;
+    border-radius: var(--radius-pill);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-top: 24px;
+    align-self: start;
+    justify-self: start;
+  }
+
+  .save-btn:hover {
+    background: #9a4c3c;
+    /* Darker terracotta */
+    border-color: #9a4c3c;
+    color: #ffffff;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(184, 92, 73, 0.3);
+  }
+
+  /* Orders Styles */
+  .orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .order-card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 32px;
+    border: 1px solid rgba(26, 23, 16, 0.04);
+    box-shadow: 0 10px 30px rgba(26, 23, 16, 0.02);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .order-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(26, 23, 16, 0.06);
+    border-color: rgba(184, 147, 58, 0.2);
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px dashed rgba(26, 23, 16, 0.1);
+  }
+
+  .order-id {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .order-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--clay);
+    letter-spacing: 0.05em;
+  }
+
+  .order-total-box {
+    text-align: right;
+  }
+
+  .order-total {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .order-payment {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--moss);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+
+  /* Tracking Timeline */
+  .tracking-wrapper {
+    margin-top: 8px;
+  }
+
+  .tracking-steps {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    max-width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .tracking-steps::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    height: 1px;
+    background: rgba(26, 23, 16, 0.1);
+    z-index: 1;
+  }
+
+  .tracking-progress-bar {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    height: 1px;
+    background: var(--gold);
+    z-index: 2;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .tracking-step {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  .step-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 1px solid rgba(26, 23, 16, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 0 4px #ffffff;
+  }
+
+  .step-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--clay);
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 80px;
+    line-height: 1.4;
+    transition: color 0.3s;
+  }
+
+  .tracking-step.completed .step-dot {
+    background: var(--moss);
+    border-color: var(--moss);
+  }
+
+  .tracking-step.completed .step-dot::after {
+    content: '';
+    width: 10px;
+    height: 5px;
+    border-left: 2px solid #ffffff;
+    border-bottom: 2px solid #ffffff;
+    transform: rotate(-45deg) translate(1px, -1px);
+  }
+
+  .tracking-step.completed .step-label {
+    color: var(--moss);
+    font-weight: 500;
+  }
+
+  .tracking-step.active .step-dot {
+    border-color: var(--gold);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(184, 147, 58, 0.1), 0 0 0 8px #ffffff;
+  }
+
+  .tracking-step.active .step-dot::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  .tracking-step.active .step-label {
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .order-cancelled .tracking-steps::before {
+    background: rgba(196, 75, 53, 0.2);
+  }
+
+  .order-cancelled .tracking-step .step-dot {
+    border-color: rgba(196, 75, 53, 0.3);
+  }
+
+  .order-cancelled .step-label {
+    color: var(--red);
+  }
+
+  .cancelled-banner {
+    background: rgba(196, 75, 53, 0.05);
+    color: var(--red);
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border: 1px dashed rgba(196, 75, 53, 0.3);
+  }
+
+  .order-items-wrapper {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(26, 23, 16, 0.05);
+  }
+
+  .order-items-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--clay);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+  }
+
+  .order-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--ink);
+    border-bottom: 1px solid rgba(26, 23, 16, 0.03);
+  }
+
+  .order-item-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .order-item-name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .order-item-qty {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(26, 23, 16, 0.05);
+    border-radius: 4px;
+    font-size: 11px;
+    color: var(--clay);
+  }
+
+  @media (max-width: 900px) {
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-wrapper">
+
+  <div class="profile-header">
+    <h1 class="profile-title">Welcome, {{ user.first_name|default:user.username }}</h1>
+    <p class="profile-subtitle">Manage your account and track your curatives</p>
+  </div>
+
+  <div class="profile-grid">
+
+    <!-- Account Information -->
+    <div class="profile-section">
+      <h2 class="section-title">Shipping Address</h2>
+      <form class="profile-form" method="POST" action="{% url 'profile' %}">
+        {% csrf_token %}
+
+        <div class="profile-form-group full-width">
+          <label>Phone Number</label>
+          <input type="text" name="phone_number" value="{{ user_profile.phone_number|default:'' }}"
+            placeholder="+91 9876543210">
+        </div>
+
+        <div class="profile-form-group full-width">
+          <label>Street Address</label>
+          <input type="text" name="address_street" value="{{ user_profile.address_street|default:'' }}" required>
+        </div>
+
+        <div class="profile-form-group full-width">
+          <label>Apartment, suite, etc. (optional)</label>
+          <input type="text" name="address_apt" value="{{ user_profile.address_apt|default:'' }}">
+        </div>
+
+        <div class="profile-form-group">
+          <label>City</label>
+          <input type="text" name="address_city" value="{{ user_profile.address_city|default:'' }}" required>
+        </div>
+
+        <div class="profile-form-group">
+          <label>State / Province</label>
+          <input type="text" name="address_state" value="{{ user_profile.address_state|default:'' }}" required>
+        </div>
+
+        <div class="profile-form-group">
+          <label>Postal Code</label>
+          <input type="text" name="address_postal" value="{{ user_profile.address_postal|default:'' }}" required>
+        </div>
+
+        <div class="profile-form-group">
+          <label>Country</label>
+          <input type="text" name="address_country" value="{{ user_profile.address_country|default:'' }}" required>
+        </div>
+
+        <button type="submit" class="save-btn">Save Changes</button>
+      </form>
+    </div>
+
+    <!-- Order History & Tracking -->
+    <div class="profile-section">
+      <h2 class="section-title">Order History</h2>
+
+      {% if orders %}
+      <div class="orders-list">
+        {% for order in orders %}
+        <div class="order-card {% if order.status == 'Cancelled' %}order-cancelled{% endif %}">
+          <div class="order-header">
+            <div>
+              <div class="order-id">Order #{{ order.id }}</div>
+              <div class="order-date">{{ order.created_at|date:"F j, Y" }}</div>
+            </div>
+            <div class="order-total-box">
+              <div class="order-total">₹{{ order.total_amount }}</div>
+              <div class="order-payment">
+                {% if order.payment_status == 'Paid' %}
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                {% endif %}
+                {{ order.get_payment_method_display }}
+              </div>
+            </div>
+          </div>
+
+          {% if order.status == 'Cancelled' %}
+          <div class="cancelled-banner">
+            This order has been cancelled
+          </div>
+          {% else %}
+          <div class="tracking-wrapper">
+            <div class="tracking-steps">
+              {% for status_name in statuses %}
+              <div class="tracking-step {% if order.status == status_name %}active{% endif %}"
+                data-status="{{ status_name }}">
+                <div class="step-dot"></div>
+                <div class="step-label">{{ status_name }}</div>
+              </div>
+              {% endfor %}
+              <div class="tracking-progress-bar" id="progress-{{ order.id }}" data-current-status="{{ order.status }}">
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="order-items-wrapper">
+            <div class="order-items-title">Items Ordered</div>
+            {% for item in order.items.all %}
+            <div class="order-item-row">
+              <span class="order-item-name">
+                <span class="order-item-qty">{{ item.quantity }}</span>
+                {{ item.product_name }}
+              </span>
+              <span>₹{{ item.price }}</span>
+            </div>
+            {% endfor %}
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div
+        style="text-align: center; padding: 60px 40px; color: var(--clay); font-family: 'DM Mono', monospace; font-size: 12px; border: 1px dashed rgba(26,23,16,0.1); border-radius: 16px;">
+        You haven't placed any orders yet.
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Array of ordered statuses
+    const statuses = ['Order Confirmation', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered'];
+
+    // Find all progress bars
+    const progressBars = document.querySelectorAll('.tracking-progress-bar');
+
+    progressBars.forEach(bar => {
+      const currentStatus = bar.getAttribute('data-current-status');
+      const currentIndex = statuses.indexOf(currentStatus);
+
+      if (currentIndex !== -1) {
+        // Calculate width percentage
+        const percentage = (currentIndex / (statuses.length - 1)) * 100;
+        bar.style.width = percentage + '%';
+
+        // Mark previous steps as completed
+        const stepsContainer = bar.parentElement;
+        const steps = stepsContainer.querySelectorAll('.tracking-step');
+
+        steps.forEach((step, index) => {
+          if (index < currentIndex) {
+            step.classList.add('completed');
+            step.classList.remove('active');
+          } else if (index === currentIndex) {
+            step.classList.add('active');
+            step.classList.remove('completed');
+          }
+        });
+      }
+    });
+  });
+</script>
+{% endblock %}

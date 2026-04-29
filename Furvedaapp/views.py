@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -23,7 +24,13 @@ def landing(request):
     return render(request, 'index.html', {'featured_products': featured_products})
 
 def shop(request):
-    objects = Product.objects.prefetch_related('gallery').all()
+    q = request.GET.get('q', '')
+    if q:
+        from django.db.models import Q
+        objects = Product.objects.filter(Q(name__icontains=q) | Q(description__icontains=q) | Q(cat__icontains=q)).prefetch_related('gallery')
+    else:
+        objects = Product.objects.prefetch_related('gallery').all()
+        
     products_list = []
     
     for p in objects:
@@ -306,4 +313,55 @@ def contact(request):
             messages.error(request, 'Please fill in all required fields.')
             
     return render(request, 'contact.html')
+
+@login_required
+def my_orders(request):
+    orders = Order.objects.filter(email=request.user.email).order_by('-created_at')
+    return render(request, 'my_orders.html', {'orders': orders})
+
+@login_required
+def track_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, email=request.user.email)
+    
+    statuses = ['Order Confirmation', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered', 'Cancelled']
+    
+    current_status_index = -1
+    if order.status in statuses:
+        current_status_index = statuses.index(order.status)
+        
+    return render(request, 'track_order.html', {
+        'order': order,
+        'statuses': statuses,
+        'current_status_index': current_status_index,
+    })
+
+@login_required
+def profile(request):
+    try:
+        user_profile = request.user.profile
+    except UserProfile.DoesNotExist:
+        user_profile = UserProfile.objects.create(user=request.user)
+        
+    if request.method == 'POST':
+        user_profile.phone_number = request.POST.get('phone_number', user_profile.phone_number)
+        user_profile.address_street = request.POST.get('address_street', user_profile.address_street)
+        user_profile.address_apt = request.POST.get('address_apt', user_profile.address_apt)
+        user_profile.address_city = request.POST.get('address_city', user_profile.address_city)
+        user_profile.address_state = request.POST.get('address_state', user_profile.address_state)
+        user_profile.address_postal = request.POST.get('address_postal', user_profile.address_postal)
+        user_profile.address_country = request.POST.get('address_country', user_profile.address_country)
+        user_profile.save()
+        messages.success(request, 'Profile updated successfully.')
+        return redirect('profile')
+        
+    orders = Order.objects.filter(email=request.user.email).order_by('-created_at')
+    
+    # We will pass the statuses so the template can render the tracker
+    statuses = ['Order Confirmation', 'Processing', 'Shipped', 'Out for Delivery', 'Delivered']
+    
+    return render(request, 'profile.html', {
+        'user_profile': user_profile,
+        'orders': orders,
+        'statuses': statuses
+    })
 

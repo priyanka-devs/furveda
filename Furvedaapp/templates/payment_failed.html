@@ -10,21 +10,31 @@
     align-items: center;
     min-height: 85vh;
   }
+
   .success-container {
     text-align: center;
     max-width: 600px;
-    background: rgba(255,255,255,0.4);
+    background: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(20px);
     padding: 60px 40px;
     border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.5);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.02);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.02);
     animation: fadeUp 1s ease forwards;
   }
+
   @keyframes fadeUp {
-    0% { opacity: 0; transform: translateY(20px); }
-    100% { opacity: 1; transform: translateY(0); }
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
+
   .success-icon {
     width: 64px;
     height: 64px;
@@ -37,6 +47,7 @@
     margin: 0 auto 30px;
     font-size: 24px;
   }
+
   .success-title {
     font-family: 'Syne', sans-serif;
     font-size: 40px;
@@ -44,13 +55,15 @@
     margin-bottom: 20px;
     line-height: 1.1;
   }
+
   .success-subtitle {
     font-family: 'DM Mono', monospace;
     font-size: 14px;
-    color: rgba(26,23,16,0.6);
+    color: rgba(26, 23, 16, 0.6);
     line-height: 1.6;
     margin-bottom: 40px;
   }
+
   .btn-home {
     display: inline-block;
     padding: 15px 40px;
@@ -65,6 +78,7 @@
     text-decoration: none;
     transition: all 0.3s ease;
   }
+
   .btn-home:hover {
     background: var(--moss);
     color: var(--sand);
@@ -78,8 +92,9 @@
 <main class="success-page">
   <div class="success-container">
     <div class="success-icon">✗</div>
-    <h1 class="success-title">Payment<br/>Failed</h1>
-    <p class="success-subtitle">Unfortunately, your payment could not be processed. Your order was not completed. Please check your payment details or try a different payment method.</p>
+    <h1 class="success-title">Payment<br />Failed</h1>
+    <p class="success-subtitle">Unfortunately, your payment could not be processed. Your order was not completed. Please
+      check your payment details or try a different payment method.</p>
     <a href="{% url 'checkout' %}" class="btn-home">Return to Checkout</a>
   </div>
 </main>

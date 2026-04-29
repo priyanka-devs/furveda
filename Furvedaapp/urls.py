@@ -36,6 +36,9 @@ urlpatterns = [
     path('payment-failed/', views.payment_failed_page, name='payment_failed_page'),
     path('success/', views.order_success, name='order_success'),
     path('logout/', views.logout_user, name='logout'),
+    path('profile/', views.profile, name='profile'),
+    path('my-orders/', views.my_orders, name='my_orders'),
+    path('track-order/<int:order_id>/', views.track_order, name='track_order'),
     
     # Django Password Reset Views
     path('password_reset/', auth_views.PasswordResetView.as_view(template_name='password_reset_form.html'), name='password_reset'),

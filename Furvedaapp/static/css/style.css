@@ -112,14 +112,12 @@ nav {
     justify-content: space-between;
     padding: 0 48px;
     height: 72px;
-    background: linear-gradient(to bottom, var(--moss) 0%, var(--cream) 100%);
-    border-bottom: 1px solid rgba(26, 23, 16, .1);
-    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    background-color: var(--cream);
     transition: background 0.4s;
 }
 
 nav.scrolled {
-    background: linear-gradient(to bottom, rgba(61, 66, 35, 0.95) 0%, rgba(245, 240, 232, 0.97) 100%);
+    background-color: rgba(245, 240, 232, 0.98);
     backdrop-filter: blur(8px);
 }
 
@@ -127,11 +125,20 @@ nav.scrolled {
     font-family: 'Lilita One', cursive;
     font-size: 36px;
     letter-spacing: .04em;
-    color: var(--moss);
+    color: var(--ink);
     text-decoration: none;
     cursor: none;
     line-height: 1;
-    text-shadow: 1px 1px 0 rgba(26, 23, 16, 0.1);
+    text-shadow: none;
+    transition: opacity 0.3s;
+}
+
+.nav-logo img {
+    filter: invert(1) brightness(0.2);
+}
+
+.nav-logo:hover {
+    opacity: 0.8;
 }
 
 .nav-links {
@@ -149,26 +156,20 @@ nav.scrolled {
     text-decoration: none;
     position: relative;
     cursor: none;
-    opacity: 0.6;
-    transition: opacity 0.3s;
-}
-
-.nav-links a:hover {
     opacity: 1;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+    font-weight: 500;
+    padding: 8px 16px;
+    background: transparent;
+    border: 1px solid rgba(26, 23, 16, 0.2);
+    border-radius: var(--radius-pill);
+    display: inline-block;
 }
 
-.nav-links a.active {
-    opacity: 1;
-}
-
-.nav-links a.active::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 0;
-    right: 0;
-    height: 1px;
+.nav-links a:hover, .nav-links a.active {
     background: var(--ink);
+    border-color: var(--ink);
+    color: var(--cream);
 }
 
 .nav-actions {
@@ -184,15 +185,17 @@ nav.scrolled {
     font-size: 10px;
     letter-spacing: .12em;
     text-transform: uppercase;
-    color: var(--cream);
+    color: var(--ink);
     cursor: none;
     padding: 0;
-    opacity: 0.65;
-    transition: opacity 0.3s;
+    opacity: 0.6;
+    transition: opacity 0.3s, color 0.3s;
+    font-weight: 500;
 }
 
 .nav-actions button:hover {
     opacity: 1;
+    color: var(--clay);
 }
 
 #cart-btn {
@@ -200,9 +203,9 @@ nav.scrolled {
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background: var(--cream);
-    color: var(--moss);
-    border: none;
+    background: transparent;
+    border: 1px solid rgba(26, 23, 16, 0.2);
+    color: var(--ink);
     border-radius: var(--radius-pill);
     font-family: 'DM Mono', monospace;
     font-size: 10px;
@@ -210,12 +213,14 @@ nav.scrolled {
     text-transform: uppercase;
     cursor: none;
     opacity: 1 !important;
-    transition: background 0.3s;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
     position: relative;
 }
 
 #cart-btn:hover {
-    background: var(--sand);
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--cream);
 }
 
 #cart-badge {
@@ -258,7 +263,6 @@ nav.scrolled {
     grid-template-columns: 1fr 1fr;
     overflow: hidden;
     position: relative;
-    border-radius: var(--radius-md);
 }
 
 .hero-left {
@@ -426,7 +430,6 @@ nav.scrolled {
     background: var(--ink);
     padding: 14px 0;
     overflow: hidden;
-    border-radius: var(--radius-md);
     white-space: nowrap;
 }
 
@@ -2566,7 +2569,6 @@ footer {
     padding: 120px 48px 60px 48px;
     overflow: hidden;
     margin-top: 72px;
-    border-radius: var(--radius-md);
 }
 
 /* Background with Image and Gradient */

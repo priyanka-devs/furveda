@@ -6,7 +6,7 @@
   text-align: center; color: var(--cream);
   margin-top: 72px;
   position: relative;
-  clip-path: inset(0 0 0 0 round var(--radius-md) var(--radius-md) var(--radius-lg) var(--radius-lg));
+  clip-path: inset(0);
 }
 .about-hero-bg { position: fixed; inset: 0; z-index: -2; }
 .about-hero-bg img {
